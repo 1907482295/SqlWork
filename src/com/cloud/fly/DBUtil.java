@@ -65,4 +65,133 @@ public class DBUtil {
 		}
 		return i;// 返回影响的行数，1为执行成功
 	}
+	public static int insertBaseShareInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "INSERT INTO %s (%s,%s) VALUES (?,?)";
+		String sql = String.format(sqlFormat, tableName, "share_no", "share_name");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			preStmt.setString(1, info.code);
+			preStmt.setString(2, info.name);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
+	public static int updateProbInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "UPDATE %s SET %s=\'?\',%s=\'?\',%s=\'?\',%s=\'?\' WHERE %s=\'?\'";
+		String sql = String.format(sqlFormat, tableName, "prob_1", "prob_5", "prob_10", "prob_20", "share_no");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			for(i = 0;i<4;i++){
+			    preStmt.setDouble(i+1, getProb(info.futureList, i));			    
+			}			
+			preStmt.setString(5, info.code);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
+	public static int updateCloseInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "UPDATE %s SET %s=\'?\',%s=\'?\' WHERE %s=\'?\'";
+		String sql = String.format(sqlFormat, tableName, "close", "preClose","share_no");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			preStmt.setDouble(1, BagDownload.getClose(info));
+			preStmt.setDouble(2, BagDownload.getPreClose(info));
+			preStmt.setString(3, info.code);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
+	public static int updatePankouInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "UPDATE %s SET %s=\'?\',%s=\'?\' WHERE %s=\'?\'";
+		String sql = String.format(sqlFormat, tableName, "buyPankou", "sellPankou","share_no");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			preStmt.setString(1, BagDownload.getBuyPankou(info));
+			preStmt.setString(2, BagDownload.getSellPankou(info));
+			preStmt.setString(3, info.code);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
+	public static int updateJYAQInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "UPDATE %s SET %s=\'?\' WHERE %s=\'?\'";
+		String sql = String.format(sqlFormat, tableName, "jyaq","share_no");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			preStmt.setString(1, JiaoYiAnQuan.getComment(info.jyaqList));
+			preStmt.setString(2, info.code);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
 }

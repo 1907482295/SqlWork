@@ -1,0 +1,7 @@
+各阶段交易安全数量
+SELECT count(share_no) as count, jyaq FROM ShareDB.share_results_20170301 group by jyaq union all
+SELECT count(share_no) as count, jyaq FROM ShareDB.share_results_20170302 group by jyaq ;
+
+
+概率排序
+SELECT * FROM ShareDB.share_results_20170302 order by prob_20 desc, prob_10 desc,prob_5 desc,prob_1 desc;

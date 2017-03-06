@@ -1,0 +1,1 @@
+SELECT * FROM ShareDB.share_results_20170302 order by prob_20 desc, prob_10 desc,prob_5 desc,prob_1 desc;
