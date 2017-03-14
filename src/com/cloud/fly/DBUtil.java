@@ -31,9 +31,9 @@ public class DBUtil {
 	}
 	public static int insertShareInfo(String tableName, SnakeInfo info) {
 		int i = 0;
-		String sqlFormat = "INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		String sqlFormat = "INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		String sql = String.format(sqlFormat, tableName, "share_no", "share_name", "prob_1", "prob_5", "prob_10",
-				"prob_20", "close", "preClose","buyPankou" ,"sellPankou","jyaq");
+				"prob_20", "close", "preClose","buyPankou" ,"sellPankou","jyaq","jibenmian","zijinmian","jishumian");
 
 		Connection cnn = getConnection();
 
@@ -51,6 +51,9 @@ public class DBUtil {
 			preStmt.setString(index+3, BagDownload.getBuyPankou(info));
 			preStmt.setString(index+4, BagDownload.getSellPankou(info));
 			preStmt.setString(index+5, JiaoYiAnQuan.getComment(info.jyaqList));
+			preStmt.setInt(index+6, Zonghepingxing.getData(info.zhpxList,0));
+			preStmt.setInt(index+7, Zonghepingxing.getData(info.zhpxList,1));
+			preStmt.setInt(index+8, Zonghepingxing.getData(info.zhpxList,2));
 			i = preStmt.executeUpdate();
 			preStmt.close();
 		} catch (SQLException e) {
@@ -92,7 +95,7 @@ public class DBUtil {
 	}
 	public static int updateProbInfo(String tableName, SnakeInfo info) {
 		int i = 0;
-		String sqlFormat = "UPDATE %s SET %s=\'?\',%s=\'?\',%s=\'?\',%s=\'?\' WHERE %s=\'?\'";
+		String sqlFormat = "UPDATE %s SET %s=?,%s=?,%s=?,%s=? WHERE %s=?";
 		String sql = String.format(sqlFormat, tableName, "prob_1", "prob_5", "prob_10", "prob_20", "share_no");
 
 		Connection cnn = getConnection();
@@ -119,7 +122,7 @@ public class DBUtil {
 	}
 	public static int updateCloseInfo(String tableName, SnakeInfo info) {
 		int i = 0;
-		String sqlFormat = "UPDATE %s SET %s=\'?\',%s=\'?\' WHERE %s=\'?\'";
+		String sqlFormat = "UPDATE %s SET %s=?,%s=? WHERE %s=?";
 		String sql = String.format(sqlFormat, tableName, "close", "preClose","share_no");
 
 		Connection cnn = getConnection();
@@ -145,7 +148,7 @@ public class DBUtil {
 	}
 	public static int updatePankouInfo(String tableName, SnakeInfo info) {
 		int i = 0;
-		String sqlFormat = "UPDATE %s SET %s=\'?\',%s=\'?\' WHERE %s=\'?\'";
+		String sqlFormat = "UPDATE %s SET %s=?,%s=? WHERE %s=?";
 		String sql = String.format(sqlFormat, tableName, "buyPankou", "sellPankou","share_no");
 
 		Connection cnn = getConnection();
@@ -171,7 +174,7 @@ public class DBUtil {
 	}
 	public static int updateJYAQInfo(String tableName, SnakeInfo info) {
 		int i = 0;
-		String sqlFormat = "UPDATE %s SET %s=\'?\' WHERE %s=\'?\'";
+		String sqlFormat = "UPDATE %s SET %s=? WHERE %s=?";
 		String sql = String.format(sqlFormat, tableName, "jyaq","share_no");
 
 		Connection cnn = getConnection();
@@ -180,6 +183,112 @@ public class DBUtil {
 			PreparedStatement preStmt = cnn.prepareStatement(sql);
 			preStmt.setString(1, JiaoYiAnQuan.getComment(info.jyaqList));
 			preStmt.setString(2, info.code);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
+	public static int updateZHPXInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "UPDATE %s SET %s=?,%s=?,%s=? WHERE %s=?";
+		String sql = String.format(sqlFormat, tableName, "jibenmian", "zijinmian","jishumian" ,"share_no");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			preStmt.setInt(1, Zonghepingxing.getData(info.zhpxList, 0));
+			preStmt.setInt(2, Zonghepingxing.getData(info.zhpxList, 1));
+			preStmt.setInt(3, Zonghepingxing.getData(info.zhpxList, 2));
+			preStmt.setString(4, info.code);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
+	
+	public static int updateQSDXInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "UPDATE %s SET %s=? WHERE %s=?";
+		String sql = String.format(sqlFormat, tableName, "qushidongxiang","share_no");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			preStmt.setDouble(1, QuShiDongXiang.getData(info.qsdxList));
+			preStmt.setString(2, info.code);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
+	public static int updateZCYLInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "UPDATE %s SET %s=?,%s=? WHERE %s=?";
+		String sql = String.format(sqlFormat, tableName, "yaliwei","zhichengwei","share_no");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			preStmt.setDouble(1, ZhiChengYaLi.getData(info.zcylList,0));
+			preStmt.setDouble(2, ZhiChengYaLi.getData(info.zcylList,1));
+			preStmt.setString(3, info.code);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
+	public static int updateRQInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "UPDATE %s SET %s=?,%s=?,%s=? WHERE %s=?";
+		String sql = String.format(sqlFormat, tableName, "renqi_yesterday","renqi_today","renqi_status","share_no");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			preStmt.setDouble(1, RenQi.getData(info.rqList,0));
+			preStmt.setDouble(2, RenQi.getData(info.rqList,1));
+			preStmt.setString(3, RenQi.getData(info.rqList));
+			preStmt.setString(4, info.code);
 			i = preStmt.executeUpdate();
 			preStmt.close();
 		} catch (SQLException e) {

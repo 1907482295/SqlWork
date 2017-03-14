@@ -3,23 +3,32 @@ package com.cloud.fly;
 import java.util.ArrayList;
 
 public class ShareWork {
-	final static String TABLE_DATE = "20170306";
+	final static String TABLE_DATE = "20170314";
 	final static String TABLE_FULL_NAME = "share_results_"+TABLE_DATE;
 	
 	public enum DATA_CLASS{
-		BASE_INFO,
-		PROB,
-		CLOSE_AND_PANKOU,
-		JYAQ
+		BASE_INFO, //基本信息
+		PROB,    //上涨概率信息
+		CLOSE_AND_PANKOU,//收盘价，昨日收盘价，盘口信息
+		JYAQ,//交易安全，买卖点，上涨阶段，下跌阶段，观察阶段，逢高抛空阶段
+		ZHPX,//综合评星，资金面，基本面，技术面
+		QSDX,//趋势动向，下行，盘整，上行
+		ZCYL,//支撑位，压力位，
+		RQ//人气，昨日人气，今日人气，人气活跃状态
 	};
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		//query();
-		insertShareSnakeInfo();
+//		insertShareSnakeInfo();
 //		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.BASE_INFO);
-//		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.PROB);
-//		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.CLOSE_AND_PANKOU);
-//		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.JYAQ);
+		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.PROB);
+		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.CLOSE_AND_PANKOU);
+		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.JYAQ);
+//		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.ZHPX);
+//		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.QSDX);
+//		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.ZCYL);
+//		downloadAndInsertShareAllInfo(TABLE_FULL_NAME, DATA_CLASS.RQ);
+		System.out.println("finish ...");
 	}
 	public static void insertShareSnakeInfo() {
 		String tableName = createTable();	
@@ -50,6 +59,22 @@ public class ShareWork {
 			JiaoYiAnQuan.downloadAll(list);
 			insertShareInfo(list,tableName, dataClass);
 			break;
+		case ZHPX:
+			Zonghepingxing.downloadAll(list);
+			insertShareInfo(list,tableName, dataClass);
+			break;
+		case QSDX:
+			QuShiDongXiang.downloadAll(list);
+			insertShareInfo(list,tableName, dataClass);
+			break;			
+		case ZCYL:
+			ZhiChengYaLi.downloadAll(list);
+			insertShareInfo(list,tableName, dataClass);
+			break;			
+		case RQ:
+			RenQi.downloadAll(list);
+			insertShareInfo(list,tableName, dataClass);
+			break;			
 		}
 	}
 	public static String createTable(){
@@ -74,6 +99,18 @@ public class ShareWork {
 				break;
 			case JYAQ:
 				DBUtil.updateJYAQInfo(tableName, list.get(i));
+				break;
+			case ZHPX:
+				DBUtil.updateZHPXInfo(tableName, list.get(i));
+				break;
+			case QSDX:
+				DBUtil.updateQSDXInfo(tableName, list.get(i));
+				break;
+			case ZCYL:
+				DBUtil.updateZCYLInfo(tableName, list.get(i));
+				break;
+			case RQ:
+				DBUtil.updateRQInfo(tableName, list.get(i));
 				break;
 			case CLOSE_AND_PANKOU:
 				DBUtil.updateCloseInfo(tableName, list.get(i));
