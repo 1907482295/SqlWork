@@ -123,7 +123,7 @@ public class DBUtil {
 	public static int updateCloseInfo(String tableName, SnakeInfo info) {
 		int i = 0;
 		String sqlFormat = "UPDATE %s SET %s=?,%s=? WHERE %s=?";
-		String sql = String.format(sqlFormat, tableName, "close", "preClose","share_no");
+		String sql = String.format(sqlFormat, tableName, "nowClose", "preClose","share_no");
 
 		Connection cnn = getConnection();
 
@@ -289,6 +289,61 @@ public class DBUtil {
 			preStmt.setDouble(2, RenQi.getData(info.rqList,1));
 			preStmt.setString(3, RenQi.getData(info.rqList));
 			preStmt.setString(4, info.code);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
+	public static int updateEPSInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "UPDATE %s SET %s=?,%s=?,%s=?,%s=?,%s=? WHERE %s=?";
+		String sql = String.format(sqlFormat, tableName, "eps2018","eps2017","eps2016","epsMax","epsMin","share_no");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			preStmt.setDouble(1, EpsFetch.getData(info.epsList,"2018"));
+			preStmt.setDouble(2, EpsFetch.getData(info.epsList,"2017"));
+			preStmt.setDouble(3, EpsFetch.getData(info.epsList,"2016"));
+			preStmt.setDouble(4, EpsFetch.getEpsMax(info.epsList));
+			preStmt.setDouble(5, EpsFetch.getEpsMin(info.epsList));
+			preStmt.setString(6, info.code);
+			i = preStmt.executeUpdate();
+			preStmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				cnn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return i;// 返回影响的行数，1为执行成功
+	}
+	public static int updateSharePriceInfo(String tableName, SnakeInfo info) {
+		int i = 0;
+		String sqlFormat = "UPDATE %s SET %s=?,%s=? WHERE %s=?";
+		String sql = String.format(sqlFormat, tableName, "priceMax","priceMin","share_no");
+
+		Connection cnn = getConnection();
+
+		try {
+			PreparedStatement preStmt = cnn.prepareStatement(sql);
+			preStmt.setDouble(1, SharePriceFetch.getPriceMax(info.sharePriceList));
+			preStmt.setDouble(2, SharePriceFetch.getPriceMin(info.sharePriceList));
+			preStmt.setString(3, info.code);
 			i = preStmt.executeUpdate();
 			preStmt.close();
 		} catch (SQLException e) {

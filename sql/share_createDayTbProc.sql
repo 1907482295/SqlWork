@@ -1,17 +1,3 @@
-各阶段交易安全数量
-SELECT count(share_no) as count, jyaq FROM ShareDB.share_results_20170301 group by jyaq union all
-SELECT count(share_no) as count, jyaq FROM ShareDB.share_results_20170302 group by jyaq ;
-
-
-概率排序
-SELECT * FROM ShareDB.share_results_20170302 order by prob_20 desc, prob_10 desc,prob_5 desc,prob_1 desc;
-
-
-SELECT *, ((yaliwei-close)/close) as pianyi FROM ShareDB.share_results_20170314 where jibenmian>6 and (jyaq = "逢低关注" or jyaq = "上涨阶段" or jyaq = "B点") and ((share_no > '33100' )or(share_no < '290000'))  order by pianyi desc;
-
-SELECT *,getFutureUpRatio(epsMax,epsMin,priceMax,priceMin,eps2018,eps2017,nowClose) as upratio,getShiYingLv(eps2017, nowClose) as 市盈率 FROM ShareDB.share_results_20170315 where eps2018 > eps2017 and share_no not like "3%" order by upratio desc;
-
-建表
 CREATE DEFINER=`root`@`localhost` PROCEDURE `share_creatDayTbProc`(IN mdate VARCHAR (16),OUT table_name1 VARCHAR(30))
 BEGIN  
   DECLARE share_results_name VARCHAR(30);  

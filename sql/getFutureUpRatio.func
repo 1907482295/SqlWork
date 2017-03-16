@@ -1,0 +1,18 @@
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` FUNCTION `getFutureUpRatio`(epsMax DOUBLE, epsMin DOUBLE, priceMax DOUBLE, priceMin DOUBLE, eps2018 DOUBLE, eps2017 DOUBLE, nowPrice DOUBLE) RETURNS double
+BEGIN
+ DECLARE k DOUBLE;
+ DECLARE priceFuture DOUBLE;
+ DECLARE ret DOUBLE;
+ 
+# IF (eps2018 > eps2017) AND (epsMax > epsMin) AND (priceMax > priceMin) THEN
+ SET k = getK(epsMax, epsMin, priceMax, priceMin);
+ SET priceFuture = getFuturePrice(eps2018, epsMin, k, priceMin);
+ SET ret = getUpRatio(priceFuture,nowPrice);
+ return ret;
+ #ELSE
+ #RETURN -2;
+ #END IF;
+#RETURN -3;
+END$$
+DELIMITER ;

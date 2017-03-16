@@ -1,1 +1,1 @@
-SELECT * FROM ShareDB.share_results_20170302 order by prob_20 desc, prob_10 desc,prob_5 desc,prob_1 desc;
+SELECT * ,getFutureUpRatio(epsMax,epsMin,priceMax,priceMin,eps2018,eps2017,nowClose) as upratio,getShiYingLv(eps2017, nowClose) as 市盈率2017,getShiYingLv(eps2018, nowClose)  as 市盈率2018 ,getShiYingLv(epsMin, priceMin)  as 市盈最小,getShiYingLv(epsMax, priceMax)  as 市盈最大 FROM ShareDB.share_results_20170315 where share_no not like "30%" and jibenmian > 7 order by prob_20 desc, prob_10 desc,prob_5 desc,prob_1 desc;

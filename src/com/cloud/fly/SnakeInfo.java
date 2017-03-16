@@ -13,5 +13,7 @@ public class SnakeInfo {
 	public List<JYAQData> qsdxList;	
 	public List<JYAQData> zcylList;	
 	public List<JYAQData> rqList;	
+	public List<Eps> epsList;	
+	public List<SharePrice> sharePriceList;	
 	public Bag bag;
 }
